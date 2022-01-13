@@ -1,0 +1,87 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'maven'
+}
+
+group = project.properties["app.group"]
+version = project.properties["app.version"]
+sourceCompatibility = '1.8'
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+    version_project = project.properties["app.version"]
+    version_logback = '1.2.6'
+    version_slf4j = '1.7.32'
+    version_log4j2 = '2.14.1'
+    version_lombok = '1.18.22'
+    version_commons_cli = '20040117.000000'
+    version_commons_lang = '3.12.0'
+    version_commons_codec = '20041127.091804'
+    version_jackson = '2.13.0'
+    version_netty = '4.1.50.Final'
+    version_log4jdbc = '1.16'
+    version_log4j = '2.17.0'
+
+    version_quartz = '2.3.2'
+    version_plankton = '0.6.2'
+    version_jsoup = '1.14.3'
+    version_okhttp = '4.9.2'
+    version_dkargo_httpclient = '0.0.25'
+    version_dkargo_if_deleo = '0.0.19'
+    version_dkargo_doms_api_client_core = '0.0.12'
+    version_dkargo_doms_api_client_order = '0.0.31'
+    version_dkargo_doms_api_client_receiving = '0.0.46'
+    version_dkargo_doms_api_client_stock = '0.0.4'
+
+    version_jetty = '2.5.5'
+    version_swagger = '2.9.2'
+    version_java = '1.8'
+    project_build_sourceEncoding = 'UTF-8'
+}
+
+sourceCompatibility = "${version_java}"
+targetCompatibility = "${version_java}"
+
+compileJava.options.encoding = "${project_build_sourceEncoding}"
+
+bootJar.enabled = false
+jar.enabled = true
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.properties["nexus.dkargo.url.release"]) {
+                authentication(userName: project.properties["nexus.dkargo.username"], password: project.properties["nexus.dkargo.password"])
+            }
+            snapshotRepository(url: project.properties["nexus.dkargo.url.snapshot"]) {
+                authentication(userName: project.properties["nexus.dkargo.username"], password: project.properties["nexus.dkargo.password"])
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compile group: 'com.withwiz', name: 'plankton', version: "${version_plankton}"
+}
+
+test {
+    useJUnitPlatform()
+}
