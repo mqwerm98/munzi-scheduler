@@ -2,6 +2,7 @@ package com.munzi.munzischeduler;
 
 import com.munzi.munzischeduler.config.ASchedulerInstance;
 import com.munzi.munzischeduler.config.SchedulerProperty;
+import com.munzi.munzischeduler.util.ValidationUtil;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -23,17 +24,17 @@ public class SchedulerWorkerManager {
         for (SchedulerProperty schedulerProperty : schedulerInstance.getSchedulerProperties()) {
             SchedulerWorkerBase schedulerWorkerBase = (SchedulerWorkerBase) context.getBean(schedulerProperty.getName());
 
-            if ((schedulerProperty.getDelay() == null || schedulerProperty.getDelay() <= 0) && (schedulerProperty.getCron() == null || schedulerProperty.getCron().isEmpty())) {
+            if (!ValidationUtil.isExists(schedulerProperty.getDelay()) && !ValidationUtil.isExists(schedulerProperty.getCron())) {
                 throw new IllegalArgumentException("Either 'delay' or 'cron' must be entered.");
             }
-            if ((schedulerProperty.getDelay() != null && schedulerProperty.getDelay() > 0) && (schedulerProperty.getCron() != null && !schedulerProperty.getCron().isEmpty())) {
+            if (ValidationUtil.isExists(schedulerProperty.getDelay()) && ValidationUtil.isExists(schedulerProperty.getCron())) {
                 throw new IllegalArgumentException("Only one of 'delay' and 'cron' should be used.");
             }
 
             schedulerWorkerBase.setDynamicDelayYn(schedulerProperty.isDynamicDelay());
-            if (schedulerProperty.getDelay() != null) {
+            if (ValidationUtil.isExists(schedulerProperty.getDelay())) {
                 schedulerWorkerBase.setDelay(schedulerProperty.getDelay());
-            } else if (schedulerProperty.getCron() != null && !schedulerProperty.getCron().isEmpty()) {
+            } else if (ValidationUtil.isExists(schedulerProperty.getCron())) {
                 schedulerWorkerBase.setCron(schedulerProperty.getCron());
             }
             schedulerWorkerBase.begin();

@@ -1,10 +1,10 @@
 package com.munzi.munzischeduler;
 
 import com.munzi.munzischeduler.util.RandomUtil;
+import com.munzi.munzischeduler.util.ValidationUtil;
 import com.withwiz.plankton.scheduler.ASpringDynamicScheduler;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.quartz.CronExpression;
 import org.springframework.scheduling.Trigger;
 
@@ -47,7 +47,7 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
             Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
             if (lastActualExecutionTime == null) lastActualExecutionTime = new Date();
 
-            if (cron != null && !cron.isEmpty()) {
+            if (ValidationUtil.isExists(cron)) {
                 try {
                     return new CronExpression(cron).getNextValidTimeAfter(lastActualExecutionTime);
                 } catch (IllegalArgumentException | ParseException e) {
@@ -57,10 +57,10 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
                 delay = delay == null ? 1000 : delay;
 
                 int delayMilliSecond = dynamicDelayYn ? RandomUtil.randomInt(delay) : delay;
-                Calendar nextExecutionTime = new GregorianCalendar();
-                nextExecutionTime.setTime(lastActualExecutionTime);
-                nextExecutionTime.add(Calendar.MILLISECOND, delayMilliSecond);
-                return nextExecutionTime.getTime();
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(lastActualExecutionTime);
+                calendar.add(Calendar.MILLISECOND, delayMilliSecond);
+                return calendar.getTime();
             }
         };
     }
