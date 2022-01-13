@@ -22,8 +22,20 @@ public class SchedulerWorkerManager {
     public void startWorker(ApplicationContext context) {
         for (SchedulerProperty schedulerProperty : schedulerInstance.getSchedulerProperties()) {
             SchedulerWorkerBase schedulerWorkerBase = (SchedulerWorkerBase) context.getBean(schedulerProperty.getName());
-            schedulerWorkerBase.setDynamicDelay(schedulerProperty.isDynamicDelay());
-            schedulerWorkerBase.setDelay(schedulerProperty.getDelay());
+
+            if ((schedulerProperty.getDelay() == null || schedulerProperty.getDelay() <= 0) && (schedulerProperty.getCron() == null || schedulerProperty.getCron().isEmpty())) {
+                throw new IllegalArgumentException("Either 'delay' or 'cron' must be entered.");
+            }
+            if ((schedulerProperty.getDelay() != null && schedulerProperty.getDelay() > 0) && (schedulerProperty.getCron() != null && !schedulerProperty.getCron().isEmpty())) {
+                throw new IllegalArgumentException("Only one of 'delay' and 'cron' should be used.");
+            }
+
+            schedulerWorkerBase.setDynamicDelayYn(schedulerProperty.isDynamicDelay());
+            if (schedulerProperty.getDelay() != null) {
+                schedulerWorkerBase.setDelay(schedulerProperty.getDelay());
+            } else if (schedulerProperty.getCron() != null && !schedulerProperty.getCron().isEmpty()) {
+                schedulerWorkerBase.setCron(schedulerProperty.getCron());
+            }
             schedulerWorkerBase.begin();
         }
     }

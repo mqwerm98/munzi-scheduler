@@ -18,7 +18,8 @@ scheduler:
     - name: "syncResourcesGatherer"
       className: "io.dkargo.hub.centercity.sync.worker.SyncResourcesGatherer"
       dynamicDelay: false
-      delay: 5000 # scheduled delay, when isDynamicDelay is true then it is max value, unit: milliseconds
+      cron: 5 * * * * *
+#      delay: 5000 # scheduled delay, when isDynamicDelay is true then it is max value, unit: milliseconds
 #    - name: "syncResourcesTplDemon"
 #      className: "io.dkargo.hub.centercity.sync.worker.SyncResourcesTplDemon"
 #      dynamicDelay: false

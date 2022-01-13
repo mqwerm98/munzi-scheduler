@@ -4,8 +4,11 @@ import com.munzi.munzischeduler.util.RandomUtil;
 import com.withwiz.plankton.scheduler.ASpringDynamicScheduler;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import org.quartz.CronExpression;
 import org.springframework.scheduling.Trigger;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -21,12 +24,17 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
     /**
      * dynamic delay yn
      */
-    protected boolean dynamicDelay;
+    protected boolean dynamicDelayYn;
 
     /**
      * delay
      */
-    protected int delay = 1000;
+    protected Integer delay;
+
+    /**
+     * cron
+     */
+    protected String cron;
 
     /**
      * set scheduler trigger(delay)
@@ -35,27 +43,29 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
      */
     @Override
     public Trigger getTrigger() {
-
         return triggerContext -> {
-            int seconds;
-            if(dynamicDelay) {
-                seconds = RandomUtil.randomInt(delay);
-            } else {
-                seconds = delay;
-            }
-//                log.debug("delay randomized: {}", seconds);
-
-            Calendar nextExecutionTime = new GregorianCalendar();
             Date lastActualExecutionTime = triggerContext.lastActualExecutionTime();
-            //you can get the value from wherever you want
-            nextExecutionTime.setTime(lastActualExecutionTime != null ? lastActualExecutionTime : new Date());
-            nextExecutionTime.add(Calendar.MILLISECOND, seconds);
-            return nextExecutionTime.getTime();
+            if (lastActualExecutionTime == null) lastActualExecutionTime = new Date();
+
+            if (cron != null && !cron.isEmpty()) {
+                try {
+                    return new CronExpression(cron).getNextValidTimeAfter(lastActualExecutionTime);
+                } catch (IllegalArgumentException | ParseException e) {
+                    throw new IllegalArgumentException("Invalid cron", e);
+                }
+            } else {
+                delay = delay == null ? 1000 : delay;
+
+                int delayMilliSecond = dynamicDelayYn ? RandomUtil.randomInt(delay) : delay;
+                Calendar nextExecutionTime = new GregorianCalendar();
+                nextExecutionTime.setTime(lastActualExecutionTime);
+                nextExecutionTime.add(Calendar.MILLISECOND, delayMilliSecond);
+                return nextExecutionTime.getTime();
+            }
         };
     }
 
     /**
-     *
      * @param data for scheduled job
      */
     @Override

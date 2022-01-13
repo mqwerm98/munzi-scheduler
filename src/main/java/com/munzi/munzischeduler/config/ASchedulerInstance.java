@@ -11,6 +11,6 @@ import java.util.List;
 @ToString
 public abstract class ASchedulerInstance {
 
-    List<SchedulerProperty> schedulerProperties;
+    private List<SchedulerProperty> schedulerProperties;
 
 }

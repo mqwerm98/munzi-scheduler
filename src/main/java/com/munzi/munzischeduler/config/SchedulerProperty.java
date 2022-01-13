@@ -12,21 +12,26 @@ public class SchedulerProperty {
     /**
      * name
      */
-    String name;
+    private String name;
 
     /**
      * implements class
      */
-    String className;
+    private String className;
 
     /**
      * dynamic delay yn
      */
-    boolean dynamicDelay;
+    private boolean dynamicDelay;
 
     /**
      * delay
      */
-    int delay;
+    private Integer delay;
+
+    /**
+     * cron
+     */
+    private String cron;
 
 }
