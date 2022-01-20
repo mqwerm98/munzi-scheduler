@@ -50,8 +50,20 @@ bootJar.enabled = false
 jar.enabled = true
 
 configurations {
+    /**
+     * 컴파일 단계에서 annotaion을 스캔하고 처리함.
+     */
     compileOnly {
         extendsFrom annotationProcessor
+    }
+    /**
+     * tomcat 제외 설정
+     */
+    compile.exclude module: "spring-boot-starter-tomcat"
+    all {
+        // log4j2를 사용하기 위해, spring의 default인 logback을 제외
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
 }
 
