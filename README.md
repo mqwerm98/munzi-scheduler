@@ -53,8 +53,8 @@ public class MunziSchedulerApplication {
      * @param args arguments
      */
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(DkargoHubApplication.class, args);
-        ((DkargoHubApplication) context.getBean("munziSchedulerApplication")).start(context);
+        ConfigurableApplicationContext context = SpringApplication.run(MunziSchedulerApplication.class, args);
+        ((MunziSchedulerApplication) context.getBean("munziSchedulerApplication")).start(context);
     }
 
 }
