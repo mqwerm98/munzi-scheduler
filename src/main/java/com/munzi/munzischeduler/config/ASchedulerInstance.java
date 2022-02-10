@@ -6,6 +6,10 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ *  SchedulerProperties를 받을 instance.
+ *  extends 받아 사용하도록 만들어졌다.
+ */
 @Setter
 @Getter
 @ToString

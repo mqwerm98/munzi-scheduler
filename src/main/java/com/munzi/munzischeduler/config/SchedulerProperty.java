@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+
+/**
+ * Scheduler property
+ */
 @Setter
 @Getter
 @ToString

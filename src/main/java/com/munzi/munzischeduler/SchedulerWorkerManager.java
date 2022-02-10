@@ -11,6 +11,11 @@ import org.springframework.context.ApplicationContext;
 public class SchedulerWorkerManager {
     private final ASchedulerInstance schedulerInstance;
 
+    /**
+     * SchedulerWorkerManager Constructor
+     *
+     * @param schedulerInstance SchedulerInstance
+     */
     public SchedulerWorkerManager(ASchedulerInstance schedulerInstance) {
         this.schedulerInstance = schedulerInstance;
     }
