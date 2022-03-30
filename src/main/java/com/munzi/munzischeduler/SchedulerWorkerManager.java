@@ -5,6 +5,11 @@ import com.munzi.munzischeduler.config.SchedulerProperty;
 import com.munzi.munzischeduler.util.ValidationUtil;
 import org.springframework.context.ApplicationContext;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.zone.ZoneRulesException;
+import java.util.TimeZone;
+
 /**
  * scheduler worker manager class
  */
@@ -41,6 +46,16 @@ public class SchedulerWorkerManager {
                 schedulerWorkerBase.setDelay(schedulerProperty.getDelay());
             } else if (ValidationUtil.isExists(schedulerProperty.getCron())) {
                 schedulerWorkerBase.setCron(schedulerProperty.getCron());
+                if (!ValidationUtil.isBlank(schedulerProperty.getZoneId())) {
+                    try {
+                        ZoneId zoneId = ZoneId.of(schedulerProperty.getZoneId());
+                        schedulerWorkerBase.setZoneId(zoneId);
+                    } catch (ZoneRulesException e) {
+                        throw new IllegalArgumentException("Invalid zoneId.");
+                    }
+                } else {
+                    schedulerWorkerBase.setZoneId(ZoneId.of("UTC"));
+                }
             }
             schedulerWorkerBase.begin();
         }

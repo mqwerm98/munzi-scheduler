@@ -38,4 +38,9 @@ public class SchedulerProperty {
      */
     private String cron;
 
+    /**
+     * zoneId (cron 기준시간)
+     */
+    private String zoneId;
+
 }

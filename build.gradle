@@ -49,7 +49,7 @@ targetCompatibility = "${version_java}"
 compileJava.options.encoding = "${project_build_sourceEncoding}"
 
 bootJar.enabled = false
-jar.enabled = true
+//jar.enabled = true
 
 // =========================================================
 //      Maven Central Repository - start
@@ -71,61 +71,58 @@ artifacts {
 
 jar {
     enabled = true
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-signing {
-    required { gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
+//signing {
+//    required { gradle.taskGraph.hasTask("uploadArchives") }
+//    sign configurations.archives
+//}
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: project.properties['ossrhUsername'], password: project.properties['ossrhPassword'])
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: project.properties['ossrhUsername'], password: project.properties['ossrhPassword'])
-            }
-
-            pom.project {
-                name 'Munzi Scheduler'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'scheduler module'
-                url 'https://github.com/mqwerm98/munzi-scheduler'
-
-                scm {
-                    connection 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
-                    developerConnection 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
-                    url 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
-                }
-
-                licenses {
-                    license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'mqwerm98'
-                        name 'munzi'
-                        email 'mqwerm98@naver.com'
-                    }
-                }
-            }
-
-        }
-    }
-}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: project.properties['ossrhUsername'], password: project.properties['ossrhPassword'])
+//            }
+//
+//            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: project.properties['ossrhUsername'], password: project.properties['ossrhPassword'])
+//            }
+//
+//            pom.project {
+//                name 'Munzi Scheduler'
+//                packaging 'jar'
+//                // optionally artifactId can be defined here
+//                description 'scheduler module'
+//                url 'https://github.com/mqwerm98/munzi-scheduler'
+//
+//                scm {
+//                    connection 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
+//                    developerConnection 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
+//                    url 'scm:git:git://github.com/mqwerm98/munzi-scheduler.git'
+//                }
+//
+//                licenses {
+//                    license {
+//                        name 'The Apache License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    }
+//                }
+//
+//                developers {
+//                    developer {
+//                        id 'mqwerm98'
+//                        name 'munzi'
+//                        email 'mqwerm98@naver.com'
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
+//}
 
 // =========================================================
 //      Maven Central Repository - end
@@ -153,18 +150,18 @@ repositories {
     mavenCentral()
 }
 
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: project.properties["nexus.url.release"]) {
-//                authentication(userName: project.properties["nexus.username"], password: project.properties["nexus.password"])
-//            }
-//            snapshotRepository(url: project.properties["nexus.url.snapshot"]) {
-//                authentication(userName: project.properties["nexus.username"], password: project.properties["nexus.password"])
-//            }
-//        }
-//    }
-//}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.properties["nexus.url.release"]) {
+                authentication(userName: project.properties["nexus.username"], password: project.properties["nexus.password"])
+            }
+            snapshotRepository(url: project.properties["nexus.url.snapshot"]) {
+                authentication(userName: project.properties["nexus.username"], password: project.properties["nexus.password"])
+            }
+        }
+    }
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'

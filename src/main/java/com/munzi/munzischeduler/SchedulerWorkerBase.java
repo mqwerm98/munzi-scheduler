@@ -9,10 +9,8 @@ import org.quartz.CronExpression;
 import org.springframework.scheduling.Trigger;
 
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Map;
+import java.time.ZoneId;
+import java.util.*;
 
 /**
  * scheduler worker base class
@@ -37,6 +35,11 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
     protected String cron;
 
     /**
+     * zoneId (cron 기준시간)
+     */
+    protected ZoneId zoneId;
+
+    /**
      * set scheduler trigger(delay)
      *
      * @return trigger
@@ -49,7 +52,9 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
 
             if (ValidationUtil.isExists(cron)) {
                 try {
-                    return new CronExpression(cron).getNextValidTimeAfter(lastActualExecutionTime);
+                    CronExpression cronExpression = new CronExpression(cron);
+                    cronExpression.setTimeZone(TimeZone.getTimeZone(zoneId));
+                    return cronExpression.getNextValidTimeAfter(lastActualExecutionTime);
                 } catch (IllegalArgumentException | ParseException e) {
                     throw new IllegalArgumentException("Invalid cron", e);
                 }
