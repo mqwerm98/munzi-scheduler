@@ -40,6 +40,13 @@ public class SchedulerWorkerBase extends ASpringDynamicScheduler {
     protected ZoneId zoneId;
 
     /**
+     * force off (강제 종료 시 true로 설정해서 사용)
+     */
+    protected boolean forceOff = false;
+
+
+
+    /**
      * set scheduler trigger(delay)
      *
      * @return trigger

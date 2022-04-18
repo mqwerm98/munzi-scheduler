@@ -5,10 +5,8 @@ import com.munzi.munzischeduler.config.SchedulerProperty;
 import com.munzi.munzischeduler.util.ValidationUtil;
 import org.springframework.context.ApplicationContext;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.zone.ZoneRulesException;
-import java.util.TimeZone;
 
 /**
  * scheduler worker manager class
