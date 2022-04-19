@@ -53,8 +53,8 @@ public class MunziSchedulerApplication {
      * @param args arguments
      */
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(DkargoHubApplication.class, args);
-        ((DkargoHubApplication) context.getBean("munziSchedulerApplication")).start(context);
+        ConfigurableApplicationContext context = SpringApplication.run(MunziSchedulerApplication.class, args);
+        ((MunziSchedulerApplication) context.getBean("munziSchedulerApplication")).start(context);
     }
 
 }
@@ -93,6 +93,7 @@ scheduler:
       className: "com.test.munzi.worker.MunziWorker2"
       dynamicDelay: false     
       cron: 0,10,20,30,40,50 * * * * ?
+      zoneId: "Asia/Seoul"
 ```
 
 |option|description|
@@ -102,3 +103,4 @@ scheduler:
 |dynamicDelay|dynamic delay 여부.<br/>default는 false.<br/>true로 설정할 경우 delay가 delay설정한 시간 이하의 랜덤값으로 스케줄링된다.<br/>cron 설정되었을 경우엔 작동하지 않는다.|
 |delay|scheduling의 delay time으로, spring scheduler의 fixed delay와 같이 동작한다.<br/>unit : millisecond<br/>default는 false.<br/>cron과 동시에 사용할 수 없다.|
 |cron|cron expression 으로 scheduing 주기를 설정하는 방식.<br/>delay와 동시에 사용할 수 없으며, dynamicDelay 설정이 적용되지 않는다.|
+|zoneId|cron의 timeZone 설정을 위한 zoneId. delay 사용시에는 optional, cron 사용시에만 required.<br/>ex) Asia/Seoul<br/>default : UTC|
